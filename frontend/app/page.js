@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const [todos,       setTodos]       = useState([]);
+  const [allTodos,    setAllTodos]    = useState([]);
   const [loading,     setLoading]     = useState(true);
   const [search,      setSearch]      = useState('');
   const [statusFilter,setStatusFilter]= useState('');
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const fetchTodos = useCallback(async () => {
     setLoading(true);
     try {
+      // Fetch filtered todos for display
       const res = await getTodos({
         search: search || undefined,
         status: statusFilter || undefined,
@@ -30,6 +32,14 @@ export default function DashboardPage() {
         order,
       });
       setTodos(res.data);
+
+      // Always fetch all todos (no status filter) to compute accurate counts
+      const allRes = await getTodos({
+        search: search || undefined,
+        sort,
+        order,
+      });
+      setAllTodos(allRes.data);
     } catch (err) {
       console.error('Failed to fetch todos', err);
     } finally {
@@ -44,9 +54,9 @@ export default function DashboardPage() {
   }, [fetchTodos, authLoading, user]);
 
   const counts = {
-    all:       todos.length,
-    pending:   todos.filter((t) => t.status === 'pending').length,
-    completed: todos.filter((t) => t.status === 'completed').length,
+    all:       allTodos.length,
+    pending:   allTodos.filter((t) => t.status === 'pending').length,
+    completed: allTodos.filter((t) => t.status === 'completed').length,
   };
 
   const handleCardUpdate = (updatedTodoOrRaw, isEditRequest) => {
@@ -55,8 +65,11 @@ export default function DashboardPage() {
       setEditTodo(updatedTodoOrRaw);
       setShowModal(true);
     } else {
-      // Status toggle — update in place
+      // Status toggle — update in place for both lists
       setTodos((prev) =>
+        prev.map((t) => (t.id === updatedTodoOrRaw.id ? updatedTodoOrRaw : t))
+      );
+      setAllTodos((prev) =>
         prev.map((t) => (t.id === updatedTodoOrRaw.id ? updatedTodoOrRaw : t))
       );
     }
@@ -64,16 +77,21 @@ export default function DashboardPage() {
 
   const handleCreate = (newTodo) => {
     setTodos((prev) => [newTodo, ...prev]);
+    setAllTodos((prev) => [newTodo, ...prev]);
   };
 
   const handleModalUpdate = (updatedTodo) => {
     setTodos((prev) =>
       prev.map((t) => (t.id === updatedTodo.id ? updatedTodo : t))
     );
+    setAllTodos((prev) =>
+      prev.map((t) => (t.id === updatedTodo.id ? updatedTodo : t))
+    );
   };
 
   const handleDelete = (id) => {
     setTodos((prev) => prev.filter((t) => t.id !== id));
+    setAllTodos((prev) => prev.filter((t) => t.id !== id));
   };
 
   const openCreateModal = () => {
