@@ -7,6 +7,7 @@ A full-stack web application for managing personal tasks. Users can register, lo
 ## Table of Contents
 
 - [About](#about)
+- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
@@ -19,6 +20,26 @@ A full-stack web application for managing personal tasks. Users can register, lo
 ## About
 
 This is a full-stack todo application with a Laravel backend and a Next.js frontend. The backend handles all the data and authentication, while the frontend provides the user interface.
+
+---
+
+## Screenshots
+
+**Dashboard — All Tasks (sorted by Created)**
+
+![Dashboard showing all tasks sorted by created date](screenshots/Screenshot%202026-07-20%20094412.png)
+
+**Dashboard — All Tasks (sorted by Due Date)**
+
+![Dashboard showing all tasks sorted by due date](screenshots/Screenshot%202026-07-20%20094431.png)
+
+**Dashboard — Completed Tasks Filter**
+
+![Dashboard filtered to show only completed tasks](screenshots/Screenshot%202026-07-20%20094438.png)
+
+**New Todo Modal**
+
+![Modal dialog for creating a new todo](screenshots/Screenshot%202026-07-20%20094453.png)
 
 ---
 
